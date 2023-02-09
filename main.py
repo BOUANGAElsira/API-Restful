@@ -1,6 +1,6 @@
 from app import app
 from config import db
-from models import Customer, Order, OrderDetail, OrderStatus, Item, Payment, Credit, Cash, Check, WireTransfer
+from models import Customer, Order, OrderDetail, OrderStatus, Item, Payment, Credit, Cash, Check, WireTransfer 
 from flask import Flask, request, jsonify, render_template
 
 with app.app_context():
@@ -138,12 +138,13 @@ def item_add():
         print(json)
         weight = json['weight']
         description = json['description']
+        price = json['price']
 
-        if weight and description and request.method == 'POST':
+        if weight and description and price and request.method == 'POST':
            
             print("******************")
 
-            item = Item(weight = weight, description = description)
+            item = Item(weight = weight, description = description, price = price)
 
             db.session.add(item)
             db.session.commit()
@@ -306,5 +307,186 @@ def wiretransfer_add():
 
 
 
-if(__name__ == '_main_'):
+
+#======================================================GET===============================================
+
+##GET de customer
+
+@app.route('/customer', methods = ['GET'])
+def get_all_customer():
+    try:
+        customers = Customer.query.all()
+        data = [{"id":customer.id, "name":customer.name, "deliveryAdress":customer.deliveryAdress, "contact":customer.contact, "active":customer.active} for customer in customers]
+        
+        resultat = jsonify({"status_code": 200, "customer" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+##GET de order
+@app.route('/order', methods = ['GET'])
+def get_all_order():
+    try:
+        orders = Order.query.all()
+        data = [{"id":order.id, "createDate": order.createDate} for order in orders]
+
+        resultat = jsonify({"status_code": 200, "order" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+##GET de orderStatus
+@app.route('/orderStatus', methods = ['GET'])
+def get_all_orderStatus():
+    try:
+        orderStatus = OrderStatus.query.all()
+        data = [{"id":orderStatu.id, "CREATE": orderStatu.CREATE, "SHIPPING":orderStatu.SHIPPING, "DELIVERED":orderStatu.DELIVERED, "PAID":orderStatu.PAID} for orderStatu in orderStatus]
+
+        resultat = jsonify({"status_code": 200, "orderStatu" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+
+##GET de orderDetail
+@app.route('/orderDetail', methods = ['GET'])
+def get_all_orderDetail():
+    try:
+        orderDetails = Order.query.all()
+        data = [{"id":orderDetail.id, "qty": orderDetail.qty, "taxStatus":orderDetail.taxtStatus} for orderDetail in orderDetails]
+
+        resultat = jsonify({"status_code": 200, "orderDetail" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+##GET de item
+@app.route('/item', methods = ['GET'])
+def get_all_item():
+    try:
+        items = Order.query.all()
+        data = [{"id":item.id, "weight":item.weight, "description": item.description, "price":item.price} for item in items]
+
+        resultat = jsonify({"status_code": 200, "item" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+
+##GET de payement
+@app.route('/payement', methods = ['GET'])
+def get_all_payement():
+    try:
+        payements = Order.query.all()
+        data = [{"id":payement.id, "amount": payement.amount} for payement in payements]
+
+        resultat = jsonify({"status_code": 200, "payement" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+
+##GET de credit
+@app.route('/credit', methods = ['GET'])
+def get_all_credit():
+    try:
+        credits = Order.query.all()
+        data = [{"id":credit.id, "number": credit.number, "type":credit.type, "expireDate":credit.expireDate} for credit in credits]
+
+        resultat = jsonify({"status_code": 200, "credit" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+
+##GET de cash
+@app.route('/cash', methods = ['GET'])
+def get_all_cash():
+    try:
+        cashs = Order.query.all()
+        data = [{"id":cash.id, "cashTendered": cash.cashTendered} for cash in cashs]
+
+        resultat = jsonify({"status_code": 200, "cash" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+
+##GET de chek
+@app.route('/chek', methods = ['GET'])
+def get_all_chek():
+    try:
+        cheks = Order.query.all()
+        data = [{"id":chek.id, "name": chek.name,"bankId":chek.bankId} for chek in cheks]
+
+        resultat = jsonify({"status_code": 200, "chek" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+
+##GET de wireTansfer
+@app.route('/wireTansfer', methods = ['GET'])
+def get_all_wireTansfer():
+    try:
+        wireTansfers = Order.query.all()
+        data = [{"id":wireTansfer.id, "bankId": wireTansfer.bankId, "bankName":wireTansfer.bankName} for wireTansfer in wireTansfers]
+
+        resultat = jsonify({"status_code": 200, "wireTansfer" : data})
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status" : 404, "message" : 'Error'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+
+if(__name__ == '__main__'):
     app.run()

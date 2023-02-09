@@ -28,3 +28,26 @@ Content-Type: application/json
     "contact" : "+228 70249511",
     "active" : true
 }
+
+###
+
+POST http://127.0.0.1:5000/orderDetail/add
+Content-Type: application/json
+
+{
+    "qty": 2,
+    "taxStatus": "Validé",
+    "orderId" : 1,
+    "itemId": 1
+}
+
+###
+
+POST http://127.0.0.1:5000/item/add
+Content-Type: application/json
+
+{
+    "weight": 6,
+    "description": "ventilateur",
+    "price": 12000
+}
