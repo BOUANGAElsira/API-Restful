@@ -14,6 +14,7 @@ Content-Type: application/json
 
 {
     "amount" : 15000,
+    "type": "Chek",
     "orderId" : 1
 }
 
