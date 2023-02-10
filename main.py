@@ -14,6 +14,7 @@ from models.WireTransfer import WireTransfer
 from flask import Flask, request, jsonify, render_template
 
 with app.app_context():
+    db.drop_all()
     db.create_all()
 
 #======================================================POST===============================================
@@ -179,8 +180,9 @@ def payment_add():
         json = request.json
         print(json)
         amount = json['amount']
+        payment_mode = json['payment_mode']
 
-        if amount and request.method == 'POST':
+        if amount and payment_mode and request.method == 'POST':
            
             print("******************")
             payments = Payment(amount = amount)
@@ -326,7 +328,7 @@ def wiretransfer_add():
 def get_all_customer():
     try:
         customers = Customer.query.all()
-        data = [{"id":customer.id, "name":customer.name, "deliveryAdress":customer.deliveryAdress, "contact":customer.contact, "active":customer.active} for customer in customers]
+        data = [{"id":customers.id, "name":customers.name, "deliveryAddress":customers.deliveryAddress, "contact":customers.contact, "active":customers.active} for customers in customers]
         
         resultat = jsonify({"status_code": 200, "customer" : data})
         return resultat
@@ -377,7 +379,7 @@ def get_all_orderStatus():
 @app.route('/orderDetail', methods = ['GET'])
 def get_all_orderDetail():
     try:
-        orderDetails = Order.query.all()
+        orderDetails = OrderDetail.query.all()
         data = [{"id":orderDetail.id, "qty": orderDetail.qty, "taxStatus":orderDetail.taxtStatus} for orderDetail in orderDetails]
 
         resultat = jsonify({"status_code": 200, "orderDetail" : data})
@@ -394,7 +396,7 @@ def get_all_orderDetail():
 @app.route('/item', methods = ['GET'])
 def get_all_item():
     try:
-        items = Order.query.all()
+        items = Item.query.all()
         data = [{"id":item.id, "weight":item.weight, "description": item.description, "price":item.price} for item in items]
 
         resultat = jsonify({"status_code": 200, "item" : data})
@@ -409,13 +411,13 @@ def get_all_item():
 
 
 ##GET de payement
-@app.route('/payement', methods = ['GET'])
-def get_all_payement():
+@app.route('/payment', methods = ['GET'])
+def get_all_payment():
     try:
-        payements = Order.query.all()
-        data = [{"id":payement.id, "amount": payement.amount} for payement in payements]
+        payments = Payment.query.all()
+        data = [{"id":payment.id, "amount": payment.amount} for payment in payments]
 
-        resultat = jsonify({"status_code": 200, "payement" : data})
+        resultat = jsonify({"status_code": 200, "payment" : data})
         return resultat
     except Exception as e:
         print(e)
@@ -498,5 +500,233 @@ def get_all_wireTansfer():
         db.session.close()
 
 
+#======================================================DELETE===============================================
+
+###DELETE de customer
+@app.route('/customer/delete')
+def delete_customer():
+    try:
+        json = request.json
+        id = json['id']
+        customers = Customer.quey.filter_by(id=id).first()
+        db.session.delete(customers)
+        db.session.commit()
+        resultat = jsonify('Customer deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###DELETE de order
+@app.route('/order/delete')
+def delete_order():
+    try:
+        json = request.json
+        id = json['id']
+        orders = Order.quey.filter_by(id=id).first()
+        db.session.delete(orders)
+        db.session.commit()
+        resultat = jsonify('Order deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###DELETE de orderStatus
+@app.route('/orderStatus/delete')
+def delete_orderStatus():
+    try:
+        json = request.json
+        id = json['id']
+        orderStatus = OrderStatus.quey.filter_by(id=id).first()
+        db.session.delete(orderStatus)
+        db.session.commit()
+        resultat = jsonify('OrderStatus deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###DELETE de orderDetail
+@app.route('/orderDetail/delete')
+def delete_orderDetail():
+    try:
+        json = request.json
+        id = json['id']
+        orderDetail = OrderDetail.quey.filter_by(id=id).first()
+        db.session.delete(orderDetail)
+        db.session.commit()
+        resultat = jsonify('OrderDetail deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###DELETE de item
+@app.route('/item/delete')
+def delete_item():
+    try:
+        json = request.json
+        id = json['id']
+        item = Item.quey.filter_by(id=id).first()
+        db.session.delete(item)
+        db.session.commit()
+        resultat = jsonify('Item deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###DELETE de payment
+@app.route('/payment/delete')
+def delete_payment():
+    try:
+        json = request.json
+        id = json['id']
+        payment = Payment.quey.filter_by(id=id).first()
+        db.session.delete(payment)
+        db.session.commit()
+        resultat = jsonify('Payment deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###DELETE de credit
+@app.route('/credit/delete')
+def delete_credit():
+    try:
+        json = request.json
+        id = json['id']
+        credit = Credit.quey.filter_by(id=id).first()
+        db.session.delete(credit)
+        db.session.commit()
+        resultat = jsonify('Credit deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###DELETE de cash
+@app.route('/cash/delete')
+def delete_cash():
+    try:
+        json = request.json
+        id = json['id']
+        cash = Cash.quey.filter_by(id=id).first()
+        db.session.delete(cash)
+        db.session.commit()
+        resultat = jsonify('Cash deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###DELETE de check
+@app.route('/check/delete')
+def delete_check():
+    try:
+        json = request.json
+        id = json['id']
+        check = Check.quey.filter_by(id=id).first()
+        db.session.delete(check)
+        db.session.commit()
+        resultat = jsonify('Check deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###DELETE de wireTansfer
+@app.route('/wireTansfer/delete')
+def delete_wireTansfer():
+    try:
+        json = request.json
+        id = json['id']
+        wireTansfer = WireTransfer.quey.filter_by(id=id).first()
+        db.session.delete(wireTansfer)
+        db.session.commit()
+        resultat = jsonify('WireTransfer deleted')
+        return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Erreur'}
+        return resultat
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+#======================================================UPDATE===============================================
+
+###UPDATE de customer
+@app.route('/customer/update', methods = ['POST', 'GET'])
+def customer_update():
+    try:
+        data = request.json
+        id = data["id"]
+        name = data["name"]
+        deliveryAddress = data["deliveryAddress"]
+        contact = data["contact"]
+        active = data["active"]
+        customers = Customer.quey.filter_by(id=id).first()
+        if id and name and deliveryAddress and contact and active and request.method == 'POST':
+            customers.name = customers
+            customers.deliveryAddress = deliveryAddress
+            customers.contact = contact
+            customers.active = active
+            db.session.commit()
+            resultat = jsonify('Customer update')
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+
+###UPDATE de order
+#@app.route('/order/update', methods = ['POST', 'GET'])
+
+#Item.getWeight(self=1.0)
+#Item.getPriceForQuantity(self=1.0, qty=2)
+
 if(__name__ == '__main__'):
-    app.run()
+    app.run(debug=True, host="0.0.0.0", port=5000)

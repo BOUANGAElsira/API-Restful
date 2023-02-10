@@ -2,7 +2,7 @@ POST http://127.0.0.1:5000/order/add
 Content-Type: application/json
 
 {
-    "createDate" : "2003-26-01",
+    "createDate" : "2023-02-10",
     "customerId" : 1
 }
 
@@ -14,7 +14,7 @@ Content-Type: application/json
 
 {
     "amount" : 15000,
-    "type": "Chek",
+    "payment_mode": "Chek",
     "orderId" : 1
 }
 
@@ -52,3 +52,19 @@ Content-Type: application/json
     "description": "ventilateur",
     "price": 12000
 }
+
+###
+
+GET http://127.0.0.1:5000/order
+
+###
+
+GET http://127.0.0.1:5000/customer
+
+###
+
+GET http://127.0.0.1:5000/item
+
+
+###
+GET http://127.0.0.1:5000/payment
