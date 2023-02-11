@@ -53,6 +53,54 @@ Content-Type: application/json
     "price": 12000
 }
 
+
+###
+POST http://127.0.0.1:5000/orderStatus/add
+Content-Type: application/json
+
+{
+    "CREATE": 5,
+    "SHIPPING": 10,
+    "DELIVERED": 12,
+    "PAID": 4
+}
+
+###
+POST http://127.0.0.1:5000/credit/add
+Content-Type: application/json
+
+{
+    "number": 3,
+    "types": "Chaque mois",
+    "expideDate": "2023-02-11"
+}
+
+###
+POST http://127.0.0.1:5000/Cash/add
+Content-Type: application/json
+
+{
+    "cashTendered": 15.0
+}
+
+###
+POST http://127.0.0.1:5000/check/add
+Content-Type: application/json
+
+{
+    "name": "Elsi",
+    "bankId": 1
+}
+
+###
+POST http://127.0.0.1:5000/wiretransfer/add
+Content-Type: application/json
+
+{
+    "bankId": 1,
+    "bankName": "Bank of Africa"
+}
+
 ###
 
 GET http://127.0.0.1:5000/order

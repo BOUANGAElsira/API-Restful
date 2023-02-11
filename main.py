@@ -723,10 +723,217 @@ def customer_update():
 
 
 ###UPDATE de order
-#@app.route('/order/update', methods = ['POST', 'GET'])
+@app.route('/order/update', methods = ['POST', 'GET'])
+def order_update():
+    try:
+        data = request.json
+        id = data["id"]
+        createDate = data["createDate"]
+        orders = Order.query.filter_by(id=id).first()
+        if id and createDate and request.method == 'POST':
+            orders.createDate = createDate
+            db.session.commit()
+            resultat = jsonify("Order update")
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
+        
+###UPDATE de orderStatus
+app.route('/orderStatus/update', methods = ['POST', 'GET'])
+def orderStatus_update():
+    try:
+        data = request.json
+        id = data["id"]
+        CREATE = data["CREATE"]
+        SHIPPING = data["SHIPPING"]
+        DELIVEDED = data["DELIVEDED"]
+        PAID = data["PAID"]
+        ordeStatus = OrderStatus.query.filter_by(id=id).first()
+        if id and CREATE and SHIPPING and DELIVEDED and PAID and request.method == 'POST':
+            ordeStatus.CREATE = CREATE
+            ordeStatus.SHIPPING = SHIPPING
+            ordeStatus.DELIVEDED = DELIVEDED
+            ordeStatus.PAID = PAID
+            db.session.commit()
+            resultat = jsonify("OrderStatus update")
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
 
-#Item.getWeight(self=1.0)
-#Item.getPriceForQuantity(self=1.0, qty=2)
+###UPDATE de orderDetail
+@app.route('/orderDetail/update', methods = ['POST', 'GET'])
+def orderDetail_update():
+    try:
+        data = request.json
+        id = data['id']
+        qty = data["qty"]
+        taxStatus = data["taxStatus"]
+        orderDetail = OrderDetail.query.filter_by(id=id).first()
+        if id and qty and taxStatus and request.method == 'POST':
+            orderDetail.qty = qty
+            orderDetail.taxStatus = taxStatus
+            db.session.commit()
+            resultat = jsonify("OrderDetail update")
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
+        
+###UPDATE de item
+@app.route('/item/update', methods = ['POST', 'GET'])
+def item_update():
+    try:
+        data = request.json
+        id = data['id']
+        weight = data['weight']
+        price = data['price']
+        description = data['description']
+        item = Item.query.filter_by(id=id).first()
+        if id and weight and price and description and request.method == 'POST':
+            item.weight = weight
+            item.price  = price 
+            item.description = description
+            db.session.commit()
+            resultat = jsonify("Item update")
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+
+###UPDATE de payment
+@app.route('/payment/update', methods = ['POST', 'GET'])
+def payment_update():
+    try:
+        data = request.json
+        id = data['id']
+        amount = data["amount"]
+        payment_mode = data["payment_mode"]
+        payment = Payment.query.filter_by(id=id).first()
+        if id and amount and payment_mode and request.method == 'POST':
+            payment.amount = amount
+            payment.payment_mode = payment_mode
+            db.session.commit()
+            resultat = jsonify("Payment update")
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###UPDATE de credit
+@app.route('/credit/update', methods = ['POST', 'GET'])
+def credit_update():
+    try:
+        data = request.json
+        id = data["id"]
+        number = data["number"]
+        type = data["type"]
+        expireDate = data["expireDate"]
+        credit = Credit.query.filter_by(id=id).first()
+        if id and number and type and expireDate and request.method == 'POST':
+            credit.number = number
+            credit.type = type
+            credit.expireDate = expireDate
+            db.session.commit()
+            resultat = jsonify("Credit update")
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###UPDATE de cash
+@app.route('/cash/update', methods = ['POST', 'GET'])
+def cash_update():
+    try:
+        data = request.json
+        id = data["id"]
+        cashTendered = data["cashTendered"]
+        cash = Cash.query.filter_by(id=id).first()
+        if id and cashTendered and request.method == 'POST':
+            cash.cashTendered = cashTendered
+            db.session.commit()
+            resultat = jsonify("Cash update")
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###UPDATE de check
+@app.route('/check/update', methods = ['POST', 'GET'])
+def check_update():
+    try:
+        data = request.json
+        id = data["id"]
+        name = data["name"]
+        bankId = data["bankId"]
+        check = Check.query.filter_by(id=id).first()
+        if id and name and bankId and request.method == 'POST':
+            check.name = name
+            check.bankId = bankId
+            db.session.commit()
+            resultat = jsonify("Check update")
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
+
+###UPDATE de wireTransfer
+@app.route('/wireTransfer/update', methods = ['POST', 'GET'])
+def wireTransfer_update():
+    try:
+        data = request.json
+        id = data["id"]
+        bankId = data["bankId"]
+        bankName = data["bankName"]
+        wireTransfer = WireTransfer.query.filter_by(id=id).first()
+        if id and bankId and bankName and request.method == 'POST':
+            wireTransfer.bankId = bankId
+            wireTransfer.bankName = bankName
+            db.session.commit()
+            resultat = jsonify("WireTransfer update")
+            return resultat
+    except Exception as e:
+        print(e)
+        resultat = {"code_status": 404, "message": 'Error'}
+        return jsonify(resultat)
+    finally:
+        db.session.rollback()
+        db.session.close()
+
 
 if(__name__ == '__main__'):
     app.run(debug=True, host="0.0.0.0", port=5000)
